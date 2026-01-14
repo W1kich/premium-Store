@@ -1,0 +1,111 @@
+// Змінні кольорів (можна винести окремо, але поки тут)
+$color-dark: #1a1a1a;
+$color-gold: #c6a665;
+$color-gray: #f9f9f9;
+
+.card {
+  background: white;
+  border: none; // Прибираємо рамку
+  border-radius: 16px; // Сучасні заокруглення
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.03); // Дуже легка тінь
+
+  // Ефект при наведенні - картка "підлітає"
+  &:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+    
+    .image {
+      transform: scale(1.05);
+    }
+  }
+}
+
+.imageContainer {
+  width: 100%;
+  height: 250px;
+  background: $color-gray;
+  padding: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: transform 0.5s ease;
+  mix-blend-mode: multiply; // Прибирає білий фон у деяких jpeg (хитрий трюк)
+}
+
+.info {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.category {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #888;
+  margin-bottom: 8px;
+}
+
+.title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: $color-dark;
+  margin: 0 0 15px;
+  line-height: 1.4;
+  // Обрізаємо текст, якщо він занадто довгий (2 рядки)
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.footer {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 15px;
+  border-top: 1px solid #eee;
+}
+
+.price {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: $color-dark;
+}
+
+.btn {
+  background-color: $color-dark;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 50px; // Pill-shape button
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.3s;
+
+  &:hover {
+    background-color: $color-gold; // Золотий при наведенні
+    color: black;
+  }
+}

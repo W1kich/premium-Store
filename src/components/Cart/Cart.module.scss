@@ -1,0 +1,178 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: flex-end;
+  z-index: 1000;
+  backdrop-filter: blur(2px); // Розмиття фону
+}
+
+.modal {
+  background: white;
+  width: 450px; // Трохи ширше
+  max-width: 100%;
+  height: 100%; // На всю висоту
+  padding: 30px;
+  box-shadow: -5px 0 25px rgba(0,0,0,0.15);
+  display: flex;
+  flex-direction: column; // Вертикальний стек
+  box-sizing: border-box;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #eee;
+  flex-shrink: 0; // Заголовок не стискається
+  
+  h2 { 
+    margin: 0; 
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+  }
+}
+
+.closeBtn {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  line-height: 1;
+  cursor: pointer;
+  color: #888;
+  transition: color 0.2s;
+
+  &:hover { color: #1a1a1a; }
+}
+
+// НОВИЙ КЛАС: Контейнер для товарів, який скролиться
+.itemsList {
+  flex-grow: 1; // Займає весь вільний простір
+  overflow-y: auto; // Скрол тільки тут
+  padding-right: 10px; // Відступ для скролбару
+  margin-bottom: 20px;
+
+  // Стилізація скролбару (щоб був красивим)
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #ddd;
+    border-radius: 10px;
+  }
+}
+
+.item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #f9f9f9;
+
+  img {
+    width: 70px;
+    height: 70px;
+    object-fit: contain;
+    margin-right: 15px;
+    border-radius: 8px;
+    background: #f9f9f9;
+    padding: 5px;
+  }
+}
+
+.itemInfo {
+  flex: 1;
+  
+  h4 {
+    margin: 0 0 5px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.95rem;
+    color: #333;
+  }
+  
+  p {
+    margin: 0;
+    color: #888;
+    font-size: 0.9rem;
+  }
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #f5f5f5;
+  padding: 5px 10px;
+  border-radius: 20px;
+
+  button {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    background: white;
+    border: none;
+    border-radius: 50%;
+    font-weight: bold;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    &:hover { background: #cca568; color: white; }
+  }
+
+  span {
+    font-weight: 600;
+    min-width: 20px;
+    text-align: center;
+  }
+}
+
+.footer {
+  flex-shrink: 0; // Футер не стискається і завжди знизу
+  padding-top: 20px;
+  border-top: 2px solid #1a1a1a;
+  background: white; // Щоб текст не просвічувався при скролі
+}
+
+.total {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1.3rem;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: #1a1a1a;
+}
+
+.checkoutBtn {
+  width: 100%;
+  padding: 18px;
+  background: #1a1a1a;
+  color: white;
+  border: none;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-radius: 8px;
+  transition: background 0.3s;
+  
+  &:hover { background: #cca568; color: black; }
+}
+
+.empty {
+  text-align: center;
+  color: #888;
+  margin-top: 50px;
+  font-size: 1.1rem;
+}
