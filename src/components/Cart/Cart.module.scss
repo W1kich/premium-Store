@@ -8,19 +8,25 @@
   display: flex;
   justify-content: flex-end;
   z-index: 1000;
-  backdrop-filter: blur(2px); // Розмиття фону
+  backdrop-filter: blur(2px); /* Background blur effect */
 }
 
 .modal {
   background: white;
-  width: 450px; // Трохи ширше
+  width: 450px; /* Default width for desktop */
   max-width: 100%;
-  height: 100%; // На всю висоту
+  height: 100%; /* Full height */
   padding: 30px;
   box-shadow: -5px 0 25px rgba(0,0,0,0.15);
   display: flex;
-  flex-direction: column; // Вертикальний стек
+  flex-direction: column; /* Vertical stack layout */
   box-sizing: border-box;
+
+  /* Mobile optimization: Full width on small screens */
+  @media (max-width: 480px) {
+    width: 100%;
+    padding: 20px;
+  }
 }
 
 .header {
@@ -30,7 +36,7 @@
   margin-bottom: 20px;
   padding-bottom: 15px;
   border-bottom: 1px solid #eee;
-  flex-shrink: 0; // Заголовок не стискається
+  flex-shrink: 0; /* Header prevents shrinking */
   
   h2 { 
     margin: 0; 
@@ -51,14 +57,14 @@
   &:hover { color: #1a1a1a; }
 }
 
-// НОВИЙ КЛАС: Контейнер для товарів, який скролиться
+/* Scrollable container for cart items */
 .itemsList {
-  flex-grow: 1; // Займає весь вільний простір
-  overflow-y: auto; // Скрол тільки тут
-  padding-right: 10px; // Відступ для скролбару
+  flex-grow: 1; /* Takes up all available vertical space */
+  overflow-y: auto; /* Scroll applies only to this area */
+  padding-right: 10px; /* Space for scrollbar */
   margin-bottom: 20px;
 
-  // Стилізація скролбару (щоб був красивим)
+  /* Scrollbar styling */
   &::-webkit-scrollbar {
     width: 6px;
   }
@@ -136,10 +142,10 @@
 }
 
 .footer {
-  flex-shrink: 0; // Футер не стискається і завжди знизу
+  flex-shrink: 0; /* Footer stays fixed at bottom, doesn't shrink */
   padding-top: 20px;
   border-top: 2px solid #1a1a1a;
-  background: white; // Щоб текст не просвічувався при скролі
+  background: white; /* Opaque background to cover scrolling items */
 }
 
 .total {

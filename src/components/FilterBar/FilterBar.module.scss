@@ -1,56 +1,63 @@
 .filterContainer {
   display: flex;
-  flex-direction: column;
-  gap: 20px;
-  padding: 0 40px;
-  margin-bottom: 20px;
+  flex-direction: column-reverse; /* Search on top, categories below on mobile (better UX) */
+  gap: 15px;
+  padding: 0 15px; /* Smaller padding for mobile */
+  margin-bottom: 10px;
   max-width: 1440px;
-  margin: 0 auto 20px; // Center horizontally
+  margin: 0 auto 20px;
   
   @media (min-width: 768px) {
-    flex-direction: row;
+    flex-direction: row; /* Switch to row layout on Desktop */
     align-items: center;
     justify-content: space-between;
+    padding: 0 40px;
   }
 }
 
 .searchWrapper {
   position: relative;
   width: 100%;
-  max-width: 300px;
+  max-width: 100%; /* Full width on mobile */
+  
+  @media (min-width: 768px) {
+    max-width: 300px; /* Limit width on Desktop */
+  }
 }
 
 .searchInput {
   width: 100%;
   padding: 12px 20px;
-  padding-right: 40px; // Space for icon
+  padding-right: 20px;
   border: 1px solid #ddd;
   border-radius: 50px;
   font-family: 'Montserrat', sans-serif;
   font-size: 0.95rem;
   outline: none;
-  transition: border-color 0.3s, box-shadow 0.3s;
+  box-sizing: border-box; /* IMPORTANT: prevents padding from breaking layout width */
 
   &:focus {
     border-color: #1a1a1a;
-    box-shadow: 0 0 0 3px rgba(0,0,0,0.05);
   }
 }
 
 .categories {
   display: flex;
-  gap: 10px;
-  overflow-x: auto; // Allow scroll on mobile
+  gap: 8px;
+  overflow-x: auto; /* Horizontal scroll for categories */
   padding-bottom: 5px;
-
-  // Hide scrollbar but keep functionality
+  width: 100%;
+  
+  /* Hide scrollbar but keep functionality */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
   &::-webkit-scrollbar {
     display: none;
   }
 }
 
 .categoryBtn {
-  padding: 8px 16px;
+  padding: 8px 14px;
   border: 1px solid #ddd;
   background: white;
   color: #555;
@@ -58,19 +65,13 @@
   cursor: pointer;
   font-family: 'Montserrat', sans-serif;
   font-weight: 600;
-  font-size: 0.85rem;
-  white-space: nowrap;
-  text-transform: capitalize; // "men's clothing" -> "Men's Clothing"
-  transition: all 0.2s;
-
-  &:hover {
-    background: #f5f5f5;
-    border-color: #ccc;
-  }
-
+  font-size: 0.8rem;
+  white-space: nowrap; /* Keep text on one line */
+  flex-shrink: 0; /* Prevent buttons from shrinking */
+  
   &.active {
     background: #1a1a1a;
-    color: #c6a665; // Gold text
+    color: #c6a665;
     border-color: #1a1a1a;
   }
 }
