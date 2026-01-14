@@ -11,20 +11,16 @@ const FilterBar = ({
     <div className={styles.filterContainer}>
       {/* Categories Buttons */}
       <div className={styles.categories}>
-        <button 
-          className={`${styles.categoryBtn} ${selectedCategory === 'all' ? styles.active : ''}`}
-          onClick={() => onCategoryChange('all')}
-        >
-          All
-        </button>
         
+        {/* We map through ALL categories (including 'all') here */}
         {categories.map(cat => (
           <button 
             key={cat}
             className={`${styles.categoryBtn} ${selectedCategory === cat ? styles.active : ''}`}
             onClick={() => onCategoryChange(cat)}
           >
-            {cat}
+            {/* If category is 'all', display 'All', otherwise display the category name */}
+            {cat === 'all' ? 'All' : cat}
           </button>
         ))}
       </div>

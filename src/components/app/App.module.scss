@@ -15,10 +15,10 @@ $color-gold: #c6a665;
   position: fixed;
   top: 0;
   left: 0;
-  right: 0; /* Stretch from left to right */
-  width: auto; /* Auto width instead of 100% to prevent overflow */
+  right: 0;
+  width: auto;
   height: 70px;
-  padding: 0 15px; /* Smaller padding on mobile */
+  padding: 0 15px;
   background: rgba(26, 26, 26, 0.95);
   backdrop-filter: blur(10px);
   color: white;
@@ -30,7 +30,7 @@ $color-gold: #c6a665;
 
   h1 {
     margin: 0;
-    font-size: 1.1rem; /* Smaller font on mobile */
+    font-size: 1.1rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: -0.5px;
@@ -71,52 +71,95 @@ $color-gold: #c6a665;
   }
 }
 
-/* --- GRID (Responsive Logic) --- */
+/* --- GRID --- */
 .grid {
   display: grid;
-  /* MOBILE: Single column full width */
+  /* Mobile: Single column */
   grid-template-columns: 1fr; 
   gap: 20px;
-  padding: 15px; /* Side padding for mobile */
+  padding: 15px;
   width: 100%;
   margin: 0 auto;
   max-width: 1440px;
 
-  /* TABLET & DESKTOP (starting from 600px) */
+  /* Desktop: Responsive grid */
   @media (min-width: 600px) {
-    /* Smart grid: cards are at least 260px wide */
     grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
     gap: 30px;
     padding: 40px;
   }
 }
 
+/* --- PAGINATION (Modern Style) --- */
 .pagination {
   display: flex;
   justify-content: center;
-  gap: 10px;
-  padding: 20px;
-  padding-bottom: 60px;
+  align-items: center;
+  gap: 8px; /* Space between buttons */
+  padding: 30px 20px 60px;
+  width: 100%;
 }
 
+/* Page Numbers */
 .pageBtn {
-  width: 36px;
-  height: 36px;
-  border: none;
+  width: 40px;
+  height: 40px;
+  border: 1px solid transparent;
   background: white;
   color: $color-dark;
   cursor: pointer;
-  border-radius: 50%;
+  border-radius: 12px; /* Soft square shape */
   font-weight: 600;
   font-family: inherit;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  font-size: 1rem;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
   display: flex;
   align-items: center;
   justify-content: center;
 
+  &:hover {
+    background: #f0f0f0;
+    transform: translateY(-2px);
+  }
+
   &.active {
     background: $color-dark;
     color: $color-gold;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    border-color: $color-dark;
+  }
+}
+
+/* Arrow Buttons (< >) */
+.arrowBtn {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #ddd;
+  background: white;
+  color: $color-dark;
+  cursor: pointer;
+  border-radius: 50%; /* Circular arrows */
+  font-weight: 700;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  font-family: monospace; /* Keeps arrows perfectly centered */
+  
+  &:hover:not(.disabled) {
+    background: $color-gold;
+    border-color: $color-gold;
+    color: white;
+    transform: scale(1.1);
+  }
+
+  &.disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    background: #f5f5f5;
+    border-color: #eee;
   }
 }
 
