@@ -1,67 +1,78 @@
 import { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { addToCart, removeFromCart } from '../../store/cartSlice'; // Ensure this path is correct
+
 import ProductCard from '../ProductCard/ProductCard';
 import FilterBar from '../FilterBar/FilterBar';
 import Cart from '../Cart/Cart';
 import styles from './App.module.scss';
 
 function App() {
+  const dispatch = useDispatch();
+
+  // --- REDUX STATE ---
+  // Access cart items from the Redux store
+  const cartItems = useSelector(state => state.cart.items);
+
+  // Calculate total quantity dynamically based on Redux state
+  const totalQuantity = cartItems.reduce((acc, item) => acc + item.quantity, 0);
+
+  // --- LOCAL STATE ---
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  
+
   // Filter & Search states
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
-  
+
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
 
-  // Cart state
+  // Cart UI state (visibility)
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const [cartItems, setCartItems] = useState([]);
 
-  // Fetch data from API
+  // --- DATA FETCHING ---
+  // Fetch data from API and multiply it to simulate a larger store
   useEffect(() => {
     fetch('https://fakestoreapi.com/products')
       .then(res => res.json())
       .then(data => {
-        setProducts(data);
+        // Data multiplication logic (20 -> 80 items)
+        const repeatedProducts = [];
+
+        // Loop 4 times to create 4 sets of the original 20 products
+        for (let i = 0; i < 4; i++) {
+          data.forEach(item => {
+            repeatedProducts.push({
+              ...item,
+              // Generate unique ID for each copy to prevent React key errors
+              // Set 1: 1-20, Set 2: 21-40, Set 3: 41-60, Set 4: 61-80
+              id: item.id + (20 * i)
+            });
+          });
+        }
+
+        setProducts(repeatedProducts);
         setLoading(false);
       })
       .catch(err => console.error('Error fetching data:', err));
   }, []);
 
-  // --- CART LOGIC ---
-  const addToCart = (product) => {
-    setCartItems(prev => {
-      const isExist = prev.find(item => item.id === product.id);
-      if (isExist) {
-        return prev.map(item => 
-          item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
-        );
-      }
-      return [...prev, { ...product, quantity: 1 }];
-    });
-    setIsCartOpen(true); 
+  // --- CART HANDLERS (Passed to Cart Modal) ---
+  
+  // Handler for the "+" button in the Cart modal
+  const handleAddOne = (item) => {
+    dispatch(addToCart(item));
   };
 
-  const removeFromCart = (id) => {
-    setCartItems(prev => prev.filter(item => item.id !== id));
+  // Handler for the "-" or "Remove" button in the Cart modal
+  const handleRemoveOne = (id) => {
+    dispatch(removeFromCart(id));
   };
-
-  const updateQuantity = (id, delta) => {
-    setCartItems(prev => prev.map(item => {
-      if (item.id === id) {
-        const newQuantity = Math.max(1, item.quantity + delta);
-        return { ...item, quantity: newQuantity };
-      }
-      return item;
-    }));
-  };
-
-  const totalQuantity = cartItems.reduce((acc, item) => acc + item.quantity, 0);
 
   // --- FILTERING LOGIC ---
+  // Extract unique categories from the expanded product list
   const categories = ['all', ...new Set(products.map(p => p.category))];
 
   const filteredProducts = products.filter(product => {
@@ -70,7 +81,7 @@ function App() {
     return matchesCategory && matchesSearch;
   });
 
-  // Reset page when filters change
+  // Reset page to 1 when filters change
   useEffect(() => {
     setCurrentPage(1);
   }, [selectedCategory, searchTerm]);
@@ -86,7 +97,7 @@ function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Logic: Previous / Next Buttons
+  // Navigation: Previous / Next Buttons
   const handlePrev = () => {
     if (currentPage > 1) paginate(currentPage - 1);
   };
@@ -98,8 +109,8 @@ function App() {
   // Generate "sliding window" for page numbers (e.g., [1, 2, 3, 4, 5])
   const getPageNumbers = () => {
     // Show fewer buttons on mobile (3), more on Desktop (5)
-    const maxVisibleButtons = window.innerWidth < 768 ? 3 : 5; 
-    
+    const maxVisibleButtons = window.innerWidth < 768 ? 3 : 5;
+
     let startPage = Math.max(1, currentPage - Math.floor(maxVisibleButtons / 2));
     let endPage = Math.min(totalPages, startPage + maxVisibleButtons - 1);
 
@@ -121,6 +132,7 @@ function App() {
     <div className={styles.container}>
       <header className={styles.header}>
         <h1>Coffee Premium Store</h1>
+        {/* Display total quantity calculated from Redux */}
         <button className={styles.cartBtn} onClick={() => setIsCartOpen(true)}>
            Cart ({totalQuantity})
         </button>
@@ -128,16 +140,17 @@ function App() {
 
       {/* Cart Modal */}
       {isCartOpen && (
-        <Cart 
-          items={cartItems} 
-          onClose={() => setIsCartOpen(false)} 
-          onRemove={removeFromCart}
-          onUpdateQuantity={updateQuantity}
+        <Cart
+          items={cartItems}
+          onClose={() => setIsCartOpen(false)}
+          // Pass handlers that dispatch Redux actions
+          onRemove={handleRemoveOne}
+          onAdd={handleAddOne}
         />
       )}
 
       {/* Filters */}
-      <FilterBar 
+      <FilterBar
         categories={categories}
         selectedCategory={selectedCategory}
         onCategoryChange={setSelectedCategory}
@@ -147,37 +160,38 @@ function App() {
 
       {/* Product Grid */}
       {filteredProducts.length === 0 ? (
-        <div style={{textAlign: 'center', marginTop: '50px', color: '#888'}}>
+        <div style={{ textAlign: 'center', marginTop: '50px', color: '#888' }}>
           <h3>No products found matching your criteria.</h3>
         </div>
       ) : (
         <main className={styles.grid}>
           {currentItems.map(product => (
-            <ProductCard 
-              key={product.id} 
-              product={product} 
-              onAddToCart={addToCart}
+            <ProductCard
+              key={product.id}
+              product={product}
+              // Note: We do NOT pass addToCart here. 
+              // ProductCard uses useDispatch internally.
             />
           ))}
         </main>
       )}
 
-      {/* --- NEW PAGINATION UI --- */}
+      {/* --- PAGINATION UI --- */}
       {totalPages > 1 && (
         <div className={styles.pagination}>
           {/* BACK Button */}
-          <button 
-            onClick={handlePrev} 
+          <button
+            onClick={handlePrev}
             disabled={currentPage === 1}
             className={`${styles.arrowBtn} ${currentPage === 1 ? styles.disabled : ''}`}
           >
-            &lt; {/* Left Arrow Symbol */}
+            &lt;
           </button>
 
           {/* Page Numbers */}
           {getPageNumbers().map((number) => (
-            <button 
-              key={number} 
+            <button
+              key={number}
               onClick={() => paginate(number)}
               className={`${styles.pageBtn} ${currentPage === number ? styles.active : ''}`}
             >
@@ -186,12 +200,12 @@ function App() {
           ))}
 
           {/* NEXT Button */}
-          <button 
-            onClick={handleNext} 
+          <button
+            onClick={handleNext}
             disabled={currentPage === totalPages}
             className={`${styles.arrowBtn} ${currentPage === totalPages ? styles.disabled : ''}`}
           >
-            &gt; {/* Right Arrow Symbol */}
+            &gt;
           </button>
         </div>
       )}
